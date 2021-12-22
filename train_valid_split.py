@@ -26,10 +26,10 @@ if __name__ == '__main__':
 
     dest_img_dir = os.path.join(args.data_root, 'images')
     train_img_dir = os.path.join(dest_img_dir, 'train')
-    valid_img_dir = os.path.join(dest_img_dir, 'valid')
+    valid_img_dir = os.path.join(dest_img_dir, 'val')
     src_label_dir = os.path.join(args.data_root, 'annotations/all_train')
     train_label_dir = src_label_dir.replace('all_train', 'train')
-    valid_label_dir = src_label_dir.replace('all_train', 'valid')
+    valid_label_dir = src_label_dir.replace('all_train', 'val')
     # if not os.path.isdir(dest_img_dir):
     os.makedirs(train_img_dir,exist_ok=True)
     os.makedirs(valid_img_dir,exist_ok=True)
@@ -42,10 +42,10 @@ if __name__ == '__main__':
 
         if i in idx:
             src_img = img_list[i]
-            dest_img = src_img.replace('all_train', 'valid')
+            dest_img = src_img.replace('all_train', 'val')
             shutil.copy(src_img, dest_img)
             src_label = src_img.replace('images', 'annotations').replace('png', 'txt')
-            dest_label = src_label.replace('all_train', 'valid')
+            dest_label = src_label.replace('all_train', 'val')
             shutil.copyfile(src_label, dest_label)
         else:
             src_img = img_list[i]
