@@ -1,6 +1,5 @@
-_base_='../faster_rcnn/faster_rcnn_r50_fpn_mstrain_3x_coco.py'
+_base_='../faster_rcnn/faster_rcnn_x101_32x4d_fpn_mstrain_3x_coco.py'
 
-data_root = '/eva_data/zchin/rsna_data/'
 
 model=dict(
     type='FasterRCNN',
@@ -11,9 +10,9 @@ model=dict(
             num_classes=1
         )
     ),
-    test_cfg=dict(
-        rcnn=dict(score_thr=0.75)
-    )
+    # test_cfg=dict(
+    #     rcnn=dict(score_thr=0.75)
+    # )
 )
 
 img_norm_cfg = dict(
@@ -34,10 +33,13 @@ test_pipeline = [
         ])
 ]
 
-# Use RepeatDataset to speed up training
+# dataset settings
 dataset_type = 'CocoDataset'
+data_root = '/eva_data/zchin/rsna_data/'
+
+# Use RepeatDataset to speed up training
 data = dict(
-    samples_per_gpu=5,
+    samples_per_gpu=2,
     workers_per_gpu=2,
     train=dict(
         type='RepeatDataset',
@@ -45,17 +47,17 @@ data = dict(
         dataset=dict(
             type=dataset_type,
             ann_file=data_root + 'annotations/instance_train.json',
-            img_prefix=data_root + 'images/train')),
+            img_prefix=data_root + 'images/train/')),
     val=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instance_val.json',
-        img_prefix=data_root + 'images/val',
+        img_prefix=data_root + 'images/val/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/instance_test.json',
-        img_prefix=data_root + 'images/test',
+        ann_file=data_root + 'annotations/instance_val.json',
+        img_prefix=data_root + 'images/val',
         pipeline=test_pipeline))
 
-runner = dict(type='EpochBasedRunner', max_epochs=50)
-load_from='/home/zchin/rsna-pneumonia-detection/mmdetection/checkpoints/faster_rcnn_r50_fpn_mstrain_3x_coco_20210524_110822-e10bd31c.pth'
+runner = dict(type='EpochBasedRunner', max_epochs=40)
+load_from='/home/zchin/rsna-pneumonia-detection/mmdetection/checkpoints/faster_rcnn_x101_32x4d_fpn_mstrain_3x_coco_20210524_124151-16b9b260.pth'
