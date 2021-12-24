@@ -90,7 +90,7 @@ def main():
     coco_info = cvt_to_coco_json(img_infos, classes)
 
     # 3 dump
-    save_dir = os.path.join(args.img_path, '..', 'annotations')
+    save_dir = os.path.join(args.img_path, '../../', 'annotations')
     mmcv.mkdir_or_exist(save_dir)
     save_path = os.path.join(save_dir, args.out)
     mmcv.dump(coco_info, save_path)
