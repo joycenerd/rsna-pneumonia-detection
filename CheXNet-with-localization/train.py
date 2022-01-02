@@ -15,6 +15,8 @@ from torch.autograd import Variable
 from sklearn.metrics import roc_auc_score
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import tqdm
+import logging
 
 os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 
@@ -89,10 +91,27 @@ class DenseNet121(nn.Module):
         return x
 
 
+def set_logger(log_dir):
+    # Setup LOG file format
+    global logger
+    logger = logging.getLogger('DenseNet121')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_handler = logging.FileHandler(os.path.join(log_dir,  "DenseNet121.txt"))
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
 
+
+def log_string(message):
+    # Write message into log.txt
+    logger.info(message)
+    print(message)
 
 
 if __name__ == '__main__':
+    os.makedirs('/eva_data/zchin/rsna_outputs/CheXNet',exist_ok=True)
+    set_logger('/eva_data/zchin/rsna_outputs/CheXNet')
 
     # prepare training set
     train_dataset = ChestXrayDataSet(train_or_valid="train",
@@ -106,14 +125,14 @@ if __name__ == '__main__':
     augment_img = []
     augment_label = []
     augment_weight = []
-    # for i in range(4):
-    for j in range(len(train_dataset)):
-        single_img, single_label, single_weight = train_dataset[j]
-        augment_img.append(single_img)
-        augment_label.append(single_label)
-        augment_weight.append(single_weight)
-        if j % 1000==0:
-            print(j)
+    for i in range(2):
+        for j in range(len(train_dataset)):
+            single_img, single_label, single_weight = train_dataset[j]
+            augment_img.append(single_img)
+            augment_label.append(single_label)
+            augment_weight.append(single_weight)
+            if j % 1000==0:
+                print(j)
 
     # shuffe data
     print(len(augment_label))
@@ -145,7 +164,7 @@ if __name__ == '__main__':
 
     optimizer = optim.Adam(model.parameters(),lr=0.0002, betas=(0.9, 0.999))
     total_length = len(augment_img)
-    for epoch in range(10):  # loop over the dataset multiple times
+    for epoch in range(20):  # loop over the dataset multiple times
         print("Epoch:",epoch)
         running_loss = 0.0
 
@@ -155,7 +174,7 @@ if __name__ == '__main__':
         augment_label = augment_label[perm_index]
         augment_weight = augment_weight[perm_index]
 
-        for index in range(0, total_length , BATCH_SIZE):
+        for index in tqdm.tqdm(range(0, total_length , BATCH_SIZE)):
             if index+BATCH_SIZE > total_length:
                 break
             # zero the parameter gradients
@@ -186,26 +205,27 @@ if __name__ == '__main__':
         pred = torch.FloatTensor()
         pred = pred.cuda()
 
-        for i, (inp, target, weight) in enumerate(valid_loader):
-            target = target.cuda()
-            gt = torch.cat((gt, target), 0)
-            #     bs, n_crops, c, h, w = inp.size()
-            input_var = Variable(inp.view(-1, 3, 224, 224).cuda(), volatile=True)
-            output = model(input_var)
-            #     output_mean = output.view(bs, n_crops, -1).mean(1)
-            pred = torch.cat((pred, output.data), 0)
+        with torch.no_grad():
+            for i, (inp, target, weight) in tqdm.tqdm(enumerate(valid_loader)):
+                target = target.cuda()
+                gt = torch.cat((gt, target), 0)
+                #     bs, n_crops, c, h, w = inp.size()
+                input_var = Variable(inp.view(-1, 3, 224, 224).cuda())
+                output = model(input_var)
+                #     output_mean = output.view(bs, n_crops, -1).mean(1)
+                pred = torch.cat((pred, output.data), 0)
 
         CLASS_NAMES = ['normal','pneumonia']
 
         AUROCs = compute_AUCs(gt, pred)
         AUROC_avg = np.array(AUROCs).mean()
-        print('The average AUROC is {AUROC_avg:.3f}'.format(AUROC_avg=AUROC_avg))
+        log_string('The average AUROC is {AUROC_avg:.3f}'.format(AUROC_avg=AUROC_avg))
         for i in range(N_CLASSES):
-            print('The AUROC of {} is {}'.format(CLASS_NAMES[i], AUROCs[i]))
+            log_string('The AUROC of {} is {}'.format(CLASS_NAMES[i], AUROCs[i]))
         
         model.train()
         # print statistics
-        print('[%d] loss: %.3f' % (epoch + 1, running_loss / 715 ))
-        torch.save(model.state_dict(),'DenseNet121_aug4_pretrain_noWeight_'+str(epoch+1)+'_'+str(AUROC_avg)+'.pkl')
+        log_string('[%d] loss: %.3f' % (epoch + 1, running_loss / 715 ))
+        torch.save(model.state_dict(),'/eva_data/zchin/rsna_outputs/CheXNet/DenseNet121_aug2_pretrain_noWeight_'+str(epoch+1)+'_'+str(AUROC_avg)+'.pkl')
 
     print('Finished Training')
