@@ -37,7 +37,9 @@ if __name__=='__main__':
         patient_id=pred['image_id']
         conf=pred['score']
         x_min,y_min,width,height=pred['bbox'][0],pred['bbox'][1],pred['bbox'][2],pred['bbox'][3]
-        
+        # width*=0.875
+        # height*=0.875
+
         if patient_id==prev_id:
             pred_str+=f' {conf} {x_min} {y_min} {width} {height}'
         else:
