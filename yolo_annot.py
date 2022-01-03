@@ -9,6 +9,7 @@ import cv2
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--dataroot',type=str,default='/eva_data/zchin/rsna_data',help='data root path')
+parser.add_argument('--destroot',type=str,default='/eva_data/zchin/rsna_data',help='data root path')
 args=parser.parse_args()
 
 
@@ -19,8 +20,8 @@ if __name__=='__main__':
     header=next(csvreader)
     
     train_dir=os.path.join(args.dataroot,'stage_2_train_images')
-    annot_dir=os.path.join(args.dataroot,'annotations/all_train')
-    dest_img_dir=os.path.join(args.dataroot,'images/all_train')
+    annot_dir=os.path.join(args.destroot,'annotations/all_train')
+    dest_img_dir=os.path.join(args.destroot,'images/all_train')
     if not os.path.isdir(annot_dir):
         os.makedirs(annot_dir)
     if not os.path.isdir(dest_img_dir):
