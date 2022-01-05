@@ -57,5 +57,5 @@ data = dict(
         img_prefix=data_root + 'images/test',
         pipeline=test_pipeline))
 
-runner = dict(type='EpochBasedRunner', max_epochs=50)
+runner = dict(type='EpochBasedRunner', max_epochs=40)
 load_from='/home/zchin/rsna-pneumonia-detection/mmdetection/checkpoints/faster_rcnn_r50_fpn_mstrain_3x_coco_20210524_110822-e10bd31c.pth'

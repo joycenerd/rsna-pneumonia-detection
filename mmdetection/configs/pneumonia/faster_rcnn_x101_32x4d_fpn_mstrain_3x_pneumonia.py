@@ -10,9 +10,9 @@ model=dict(
             num_classes=1
         )
     ),
-    # test_cfg=dict(
-    #     rcnn=dict(score_thr=0.75)
-    # )
+    test_cfg=dict(
+        rcnn=dict(score_thr=0.75)
+    )
 )
 
 img_norm_cfg = dict(
@@ -39,7 +39,7 @@ data_root = '/eva_data/zchin/rsna_data/'
 
 # Use RepeatDataset to speed up training
 data = dict(
-    samples_per_gpu=2,
+    samples_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type='RepeatDataset',
@@ -55,8 +55,8 @@ data = dict(
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/instance_val.json',
-        img_prefix=data_root + 'images/val',
+        ann_file=data_root + 'annotations/instance_test.json',
+        img_prefix=data_root + 'images/test',
         pipeline=test_pipeline))
 
 runner = dict(type='EpochBasedRunner', max_epochs=40)
