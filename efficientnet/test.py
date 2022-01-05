@@ -21,6 +21,7 @@ parser.add_argument('--num-classes', type=int, default=200, help='number of clas
 parser.add_argument('--net', type=str, default="efficientnet-b4", help="which model")
 parser.add_argument('--gpu', type=int, default=2, help='gpu id')
 parser.add_argument('--savedir',type=str,default='/eva_data/zchin/rsna_data_all/images/test_detect')
+parser.add_argument('--thres',type=float,default=0.2,help='classfication probability threshold')
 args = parser.parse_args()
 
 
@@ -62,7 +63,7 @@ def test(img_names, ckpt, img_size, net, gpu, num_classes, data_root):
             probs=F.softmax(outputs)
             prob1=probs.cpu().squeeze(0)[1]
             
-            if preds==1 or prob1>=0.1:
+            if preds==1 or prob1>=args.thres:
                 dest_path=os.path.join(args.savedir,img_name)
                 shutil.copyfile(img_path,dest_path)
                 answer.append([img_name])
