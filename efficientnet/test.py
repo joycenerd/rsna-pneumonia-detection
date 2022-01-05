@@ -7,6 +7,10 @@ import torch
 from PIL import Image
 from torch.autograd import Variable
 from collections import OrderedDict
+import shutil
+import tqdm
+import torch.nn.functional as F
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data-root', type=str, default='/eva_data/zchin/2021VRDL_HW1_datasets', help='data root dir')
@@ -16,17 +20,13 @@ parser.add_argument('--img-size', type=int, default=380, help='image size in mod
 parser.add_argument('--num-classes', type=int, default=200, help='number of classes')
 parser.add_argument('--net', type=str, default="efficientnet-b4", help="which model")
 parser.add_argument('--gpu', type=int, default=2, help='gpu id')
+parser.add_argument('--savedir',type=str,default='/eva_data/zchin/rsna_data_all/images/test_detect')
 args = parser.parse_args()
 
 
-# submission = []
-# for img in test_images:  # image order is important to your result
-#     predicted_class = your_model(img)  # the predicted category
-#     submission.append([img, predicted_class])
+os.makedirs(args.savedir,exist_ok=True)
 
-# np.savetxt('answer.txt', submission, fmt='%s')
-
-def test(img_names, ckpt, img_size, net, gpu, num_classes, data_root, class_table):
+def test(img_names, ckpt, img_size, net, gpu, num_classes, data_root):
     data_transform = transforms.Compose([
         transforms.Resize(img_size),
         transforms.ToTensor(),
@@ -47,31 +47,39 @@ def test(img_names, ckpt, img_size, net, gpu, num_classes, data_root, class_tabl
     print(f"epoch: {checkpoint['epoch']}")
     print(f"eval acc: {checkpoint['acc']:.4f}")
 
-    submission = []
-    for img_name in img_names:
-        img_path = os.path.join(data_root, 'testing_images', img_name)
-        image = Image.open(img_path).convert('RGB')
-        image = data_transform(image).unsqueeze(0)
+    answer = []
+    with torch.no_grad():
+        for img_name in tqdm.tqdm(img_names):
+            img_path = os.path.join(data_root, 'images/test', img_name)
+            image = Image.open(img_path).convert('RGB')
+            image = data_transform(image).unsqueeze(0)
 
-        inputs = Variable(image.cuda(gpu))
-        outputs = model(inputs)
-        _, preds = torch.max(outputs.data, 1)
-        preds = preds.cpu().numpy()[0]
-        submission.append([img_name, class_table[preds]])
+            inputs = Variable(image.cuda(gpu))
+            outputs = model(inputs)
+            _, preds = torch.max(outputs.data, 1)
+            preds = preds.cpu().numpy()[0]
 
-    np.savetxt('answer.txt', submission, fmt='%s')
+            probs=F.softmax(outputs)
+            prob1=probs.cpu().squeeze(0)[1]
+            
+            if preds==1 or prob1>=0.1:
+                dest_path=os.path.join(args.savedir,img_name)
+                shutil.copyfile(img_path,dest_path)
+                answer.append([img_name])
+
+    np.savetxt('answer.txt', answer, fmt='%s')
     print("complete...")
 
 
 if __name__ == "__main__":
-    with open(os.path.join(args.data_root, 'testing_img_order.txt')) as f:
+    with open(os.path.join(args.data_root, 'test.txt')) as f:
         test_images = [x.strip() for x in f.readlines()]  # all the testing images
 
-    classes_f = open(os.path.join(args.data_root, 'classes.txt'), 'r', encoding='utf-8')
-    class_table = {}
-    for _class in classes_f:
-        class_num = int(_class.strip().split('.')[0]) - 1
-        class_table[class_num] = _class.strip()
+    # classes_f = open(os.path.join(args.data_root, 'classes.txt'), 'r', encoding='utf-8')
+    # class_table = {}
+    # for _class in classes_f:
+    #     class_num = int(_class.strip().split('.')[0]) - 1
+    #     class_table[class_num] = _class.strip()
     # print(class_table)
 
-    test(test_images, args.ckpt, args.img_size, args.net, args.gpu, args.num_classes, args.data_root, class_table)
+    test(test_images, args.ckpt, args.img_size, args.net, args.gpu, args.num_classes, args.data_root)
