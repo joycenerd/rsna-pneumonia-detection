@@ -45,7 +45,7 @@ python train.py --batch-size 4 --img 1280 1280 --data config.yaml --cfg cfg/yolo
 ```
 
 ## Download the checkpoint
-https://drive.google.com/file/d/1OZJDF4sLycTq32JNS2Cxpx09lgpODsvk/view?usp=sharing
+https://drive.google.com/file/d/1pNnBwk_KVDgIavoRxRkF5hbMxWw7xOw3/view?usp=sharing
 ## Inference 
 ```
 python detect.py --source <path_to_testing_images> --cfg cfg/yolor_w6.cfg --weights best.pt --conf 0.234 --img-size 1024 --device 0 --save-txt --output rsna_output/yolor_w6
