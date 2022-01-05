@@ -21,6 +21,7 @@ if __name__ == '__main__':
     writer.writerow(header)
 
     # record all the testing images
+    print(args.test_img)
     id_dict = dict()
     for img_name in os.listdir(args.test_img):
         img_list = img_name.split('.')
