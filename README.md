@@ -6,8 +6,10 @@
 This repository is implementation of final project for IOC5008 Selected Topics in Visual Recognition using Deep Learning course in 2021 fall semester at National Yang Ming Chiao Tung University.
 
 In the final project, we participated the RSNA Pneumonia Detection Challenge on Kaggle. The challenge is about to detect a visual signal for pneumonia in medical images. The dataset contains about 30,000 medical images, which belong to 3 kind of different classes. The classes are Lung Opacity, No Lung Opacity / Not Normal and Normal respectively. Lung Opacity means the patient is diagnosed with pneumonia. No Lung Opacity / Not Normal means the patient is diagnosed as other lung diseases but not pneumonia. The Normal class means no disease is detected. As a consequence, it is not easy to detect pneumonia with these data. First of all, the No Lung Opacity / Not Normal class may mislead the model. Secondly, the data is extremely imbalanced as the figure shown below. Images with bounding box.
+
 ![](./figure/distribution.JPG)
-we have tried detection only method, first classification then detection method and ensembling. We get the best results when using EficientNet as classification model with 0.2 classfication probability threshold when testing, and YOLOR as detection model. We think our method's main contribution is to do classification first then detection to reduce false positive results, due to the nature of our highly imbalanced data.
+
+We have tried detection only method, first classification then detection method and ensembling. We get the best results when using EficientNet as classification model with 0.2 classfication probability threshold when testing, and YOLOR as detection model. We think our method's main contribution is to do classification first then detection to reduce false positive results, due to the nature of our highly imbalanced data.
 
 Below are the instructions to reproduce our best results.
 
