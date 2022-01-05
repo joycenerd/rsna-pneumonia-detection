@@ -132,13 +132,13 @@ def train():
 
         if eval_acc > best_acc:
             best_acc = eval_acc
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'lr': scheduler.optimizer.param_groups[0]['lr'],
-            'acc': eval_acc
-        }, os.path.join(ckpt_dir, 'best_model.pth'))
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'lr': scheduler.optimizer.param_groups[0]['lr'],
+                'acc': eval_acc
+            }, os.path.join(ckpt_dir, 'best_model.pth'))
 
         if (epoch + 1) % 10 == 0:
         # save checkpoint
