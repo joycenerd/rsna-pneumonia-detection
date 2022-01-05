@@ -5,8 +5,8 @@
 
 This repository is implementation of final project for IOC5008 Selected Topics in Visual Recognition using Deep Learning course in 2021 fall semester at National Yang Ming Chiao Tung University.
 
-In the final project, we participated the RSNA Pneumonia Detection Challenge on Kaggle. The challenge is about to detect a visual signal for pneumonia in medical images. The dataset contains about 30,000 medical images, which belong to 3 kind of different classes. The classes are Lung Opacity, No Lung Opacity / Not Normal and Normal respectively. Lung Opacity means the patient is diagnosed with pneumonia. No Lung Opacity / Not Normal means the patient is diagnosed as other lung diseases but not pneumonia. The Normal class means no disease is detected. As a consequence, it is not easy to detect pneumonia with these data. First of all, the No Lung Opacity / Not Normal class may mislead the model. Secondly, the data is extremely imbalanced as the figure shown below. Images with bounding box (Lung Opacity) only account less than 1/3 of the whole dataset. 
-<img src="./figure/distribution.JPG">
+In the final project, we participated the RSNA Pneumonia Detection Challenge on Kaggle. The challenge is about to detect a visual signal for pneumonia in medical images. The dataset contains about 30,000 medical images, which belong to 3 kind of different classes. The classes are Lung Opacity, No Lung Opacity / Not Normal and Normal respectively. Lung Opacity means the patient is diagnosed with pneumonia. No Lung Opacity / Not Normal means the patient is diagnosed as other lung diseases but not pneumonia. The Normal class means no disease is detected. As a consequence, it is not easy to detect pneumonia with these data. First of all, the No Lung Opacity / Not Normal class may mislead the model. Secondly, the data is extremely imbalanced as the figure shown below. Images with bounding box.
+![](./figure/distribution.JPG)
 we have tried detection only method, first classification then detection method and ensembling. We get the best results when using EficientNet as classification model with 0.2 classfication probability threshold when testing, and YOLOR as detection model. We think our method's main contribution is to do classification first then detection to reduce false positive results, due to the nature of our highly imbalanced data.
 
 Below are the instructions to reproduce our best results.
@@ -207,7 +207,7 @@ python train.py --batch-size 4 --img 1280 1280 --data config.yaml --cfg cfg/yolo
 ### Testing
 ```
 cd yolor
-python detect.py --source <path_to_testing_images> --cfg cfg/yolor_w6.cfg --weights best.pt --conf 0.234 --img-size 1024 --device 0 --save-txt --output rsna_output/yolor_w6
+python detect.py --source <path_to_testing_images> --cfg cfg/yolor_w6.cfg --weights best.pt --conf 0.234 --img-size 1024 --device 0 --save-txt --output rsna_output/yolor_w6 --classification-path answer.txt
 ```
 ### Post-processing
 1. Create prediction json file
@@ -229,6 +229,13 @@ Upload the submission.txt to Kaggle RSNA Pneumonia detection challenge: [Late Su
 ### Pre-trained weights
 * This is the Google drive link of trained EfficientNet-b4 model weights: [epoch_30.pth](https://drive.google.com/file/d/1CGD-evmXfgjTod_StM422qy-_-CqiRUy/view?usp=sharing)
 * This is the Google drive link of trained YOLOR model weights: [best.pt](https://drive.google.com/file/d/1pNnBwk_KVDgIavoRxRkF5hbMxWw7xOw3/view?usp=sharing)
+
+### Detection only results
+![](./figure/det.png)
+
+### First flassification then detection results
+![](./figure/cls_det.png)
+
 
 
 ## Reproduce our submission
