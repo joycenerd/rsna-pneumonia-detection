@@ -57,7 +57,7 @@ You can choose to download the data that we have pre-processed already or you ca
 ### Option#1: Download the data that have been pre-processed
 
 **EfficientNet used data**
-1. Download the data from the Google drive link: 
+1. Download the data from the Google drive link: (**TBD**)
 2. After decompress the zip file, the data folder structure should look like this:
 ```
 rsna_data_all
