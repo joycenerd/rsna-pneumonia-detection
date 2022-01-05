@@ -18,11 +18,13 @@ import logging
 import torch.nn.functional as F
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-root', type=str, required=True, help='Your dataset root directory')
+parser.add_argument('--data-root', type=str, required=True,
+                    help='Your dataset root directory')
 parser.add_argument('--model', type=str, default="efficientnet-b4",
                     help="which model")
 parser.add_argument('--lr', type=float, default=0.01, help="learning rate")
-parser.add_argument('--gpu', type=int, nargs='+', required=True, default=[0, 1], help='gpu device')
+parser.add_argument('--gpu', type=int, nargs='+',
+                    required=True, default=[0, 1], help='gpu device')
 parser.add_argument('--epochs', type=int, default=200, help='num of epoch')
 parser.add_argument('--num-classes', type=int, default=200,
                     help='The number of classes for your classification problem')
@@ -32,7 +34,8 @@ parser.add_argument('--dev-batch-size', type=int, default=8,
                     help='The batch size for validation data')
 parser.add_argument('--num-workers', type=int, default=3,
                     help='The number of worker while training')
-parser.add_argument('--logs', type=str, required=True, help='Directory to save all your checkpoint.pth')
+parser.add_argument('--logs', type=str, required=True,
+                    help='Directory to save all your checkpoint.pth')
 parser.add_argument('--img-size', type=int, default=380,
                     help='Input image size')
 opt = parser.parse_args()
@@ -65,8 +68,10 @@ def train():
 
     # initialize optimizer and scheduler
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=opt.lr, momentum=0.9, weight_decay=1e-5, nesterov=True)
-    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=4, verbose=True, cooldown=1)
+    optimizer = torch.optim.SGD(
+        model.parameters(), lr=opt.lr, momentum=0.9, weight_decay=1e-5, nesterov=True)
+    scheduler = ReduceLROnPlateau(
+        optimizer, mode='min', factor=0.5, patience=4, verbose=True, cooldown=1)
     early_stopping = EarlyStopping(patience=15, verbose=True)
 
     for epoch in range(opt.epochs):
@@ -123,7 +128,7 @@ def train():
         writer.add_scalar("eval loss/epochs", eval_loss, epoch + 1)
         writer.add_scalar("eval accuracy/epochs", eval_acc, epoch + 1)
         log_string(f'Eval loss: {eval_loss:.4f}\taccuracy: {eval_acc:.4f}')
-        
+
         scheduler.step(eval_loss)
         early_stopping(eval_loss, model)
         if early_stopping.early_stop:
@@ -141,7 +146,7 @@ def train():
             }, os.path.join(ckpt_dir, 'best_model.pth'))
 
         if (epoch + 1) % 10 == 0:
-        # save checkpoint
+            # save checkpoint
             torch.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
@@ -158,8 +163,10 @@ def set_logger(log_dir):
     global logger
     logger = logging.getLogger(opt.model)
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    file_handler = logging.FileHandler(os.path.join(log_dir, opt.model + ".txt"))
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_handler = logging.FileHandler(
+        os.path.join(log_dir, opt.model + ".txt"))
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)

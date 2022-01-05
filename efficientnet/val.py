@@ -19,11 +19,13 @@ import torch.nn.functional as F
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-root', type=str, required=True, help='Your dataset root directory')
+parser.add_argument('--data-root', type=str, required=True,
+                    help='Your dataset root directory')
 parser.add_argument('--model', type=str, default="efficientnet-b4",
                     help="which model")
 parser.add_argument('--lr', type=float, default=0.01, help="learning rate")
-parser.add_argument('--gpu', type=int, nargs='+', required=True, default=[0, 1], help='gpu device')
+parser.add_argument('--gpu', type=int, nargs='+',
+                    required=True, default=[0, 1], help='gpu device')
 parser.add_argument('--epochs', type=int, default=200, help='num of epoch')
 parser.add_argument('--num-classes', type=int, default=200,
                     help='The number of classes for your classification problem')
@@ -33,17 +35,19 @@ parser.add_argument('--dev-batch-size', type=int, default=8,
                     help='The batch size for validation data')
 parser.add_argument('--num-workers', type=int, default=3,
                     help='The number of worker while training')
-parser.add_argument('--logs', type=str, required=True, help='Directory to save all your checkpoint.pth')
+parser.add_argument('--logs', type=str, required=True,
+                    help='Directory to save all your checkpoint.pth')
 parser.add_argument('--img-size', type=int, default=380,
                     help='Input image size')
-parser.add_argument('--ckpt',type=str,default='/eva_data/zchin/rsna_outputs/efficientnet_b4/checkpoints/epoch_30.pth',help='checkpoint path')
+parser.add_argument('--ckpt', type=str,
+                    default='/eva_data/zchin/rsna_outputs/efficientnet_b4/checkpoints/epoch_30.pth', help='checkpoint path')
 opt = parser.parse_args()
 
 num_str = ",".join(str(gpu_id) for gpu_id in opt.gpu)
 os.environ["CUDA_VISIBLE_DEVICES"] = num_str
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     # evaluate set
     eval_set = make_dataset("eval", opt.data_root, opt.img_size)
     eval_loader = Dataloader(
@@ -61,12 +65,12 @@ if __name__=='__main__':
     model.load_state_dict(state_dict)
     model.to(device)
     model.eval()
-    
+
     print("model loaded...")
     print(f"epoch: {checkpoint['epoch']}")
     print(f"eval acc: {checkpoint['acc']:.4f}")
 
-    eval_corrects=0
+    eval_corrects = 0
 
     with torch.no_grad():
         for i, (inputs, labels) in enumerate(tqdm(eval_loader)):
@@ -77,7 +81,7 @@ if __name__=='__main__':
             _, preds = torch.max(outputs.data, 1)
 
             eval_corrects += torch.sum(preds == labels.data)
-            
+
         eval_acc = float(eval_corrects) / len(eval_set)
 
         print(f'val acc: {eval_acc}')
