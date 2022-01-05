@@ -1,7 +1,7 @@
 # rsna-pneumonia-detection
 Final project of VRDL course in 2021 fall semester at NYCU. 
 
-# One-stage detection model - YOLOR
+# YOLOR
 
 ## Clone the repo
 ```
@@ -45,10 +45,10 @@ python train.py --batch-size 4 --img 1280 1280 --data config.yaml --cfg cfg/yolo
 ```
 
 ## Download the checkpoint
-https://drive.google.com/file/d/1OZJDF4sLycTq32JNS2Cxpx09lgpODsvk/view?usp=sharing
+https://drive.google.com/file/d/1pNnBwk_KVDgIavoRxRkF5hbMxWw7xOw3/view?usp=sharing
 ## Inference 
 ```
-python detect.py --source <path_to_testing_images> --cfg cfg/yolor_w6.cfg --weights best.pt --conf 0.3 --img-size 1024 --device 0 --save-txt --output rsna_output/yolor_w6
+python detect.py --source <path_to_testing_images> --cfg cfg/yolor_w6.cfg --weights best.pt --conf 0.234 --img-size 1024 --device 0 --save-txt --output rsna_output/yolor_w6
 ```
 ## Create prediction json file
 ```
@@ -56,5 +56,5 @@ python yolo2json.py --txt-path rsna_output/yolor_w6/ --test-img ../../rsna_data/
 ```
 ## Create csv submission
 ```
-python ../yolo_create_submission.py --pred-json answer.json --test-img ../../rsna_data/images/test
+python yolo_create_submission.py --pred-json answer.json --test-img ../../rsna_data/images/test
 ```
