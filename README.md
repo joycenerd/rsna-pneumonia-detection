@@ -7,6 +7,7 @@
 * Zhi-Yi Chin: joycenerd.cs09@nycu.edu.tw
 * Chieh-Ming Jiang: nax1016.cs10@nycu.edu.tw
 
+## Introduction
 This repository is implementation of final project for IOC5008 Selected Topics in Visual Recognition using Deep Learning course in 2021 fall semester at National Yang Ming Chiao Tung University.
 
 In the final project, we participated the RSNA Pneumonia Detection Challenge on Kaggle. The challenge is about to detect a visual signal for pneumonia in medical images. The dataset contains about 30,000 medical images, which belong to 3 kind of different classes. The classes are Lung Opacity, No Lung Opacity / Not Normal and Normal respectively. Lung Opacity means the patient is diagnosed with pneumonia. No Lung Opacity / Not Normal means the patient is diagnosed as other lung diseases but not pneumonia. The Normal class means no disease is detected. As a consequence, it is not easy to detect pneumonia with these data. First of all, the No Lung Opacity / Not Normal class may mislead the model. Secondly, the data is extremely imbalanced as the figure shown below. Images with bounding box.
