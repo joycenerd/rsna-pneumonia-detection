@@ -1,7 +1,7 @@
 # rsna-pneumonia-detection
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-### [Report](./docs/REPORT.pdf)
+### [Report](https://drive.google.com/file/d/1S0MRRq2Ej19p18ZYs3y1Lb5WDHZN7xLV/view?usp=sharing) | [Slides](https://drive.google.com/file/d/1iMC_G35EuJ9ObWxtH5yVydpKOANabI_2/view?usp=sharing)
 
 ## Teammate
 * Zhi-Yi Chin: joycenerd.cs09@nycu.edu.tw
@@ -267,6 +267,7 @@ We thank the authors of these repositories:
 * [ultralytics/yolov5](https://github.com/ultralytics/yolov5)
 * [open-mmlab/mmdetection](https://github.com/open-mmlab/mmdetection)
 * [thtang/CheXNet-with-localization](https://github.com/thtang/CheXNet-with-localization)
+* [WongKinYiu/yolor](https://github.com/WongKinYiu/yolor)
 
 ## Citation
 If you find our work useful in your project, please cite:
