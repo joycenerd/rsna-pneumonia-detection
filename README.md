@@ -240,9 +240,11 @@ Upload the submission.txt to Kaggle RSNA Pneumonia detection challenge: [Late Su
 ### Detection only results
 ![](./figure/det.png)
 
-### First flassification then detection results
+### First classification then detection results
 ![](./figure/cls_det.png)
 
+### Final results
+Shrink the width and height of the predicted bounding box by 87.5% yields the best results: 18.9%.
 
 
 ## Reproduce our submission
