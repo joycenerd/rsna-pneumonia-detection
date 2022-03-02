@@ -1,7 +1,7 @@
 # rsna-pneumonia-detection
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-### [Report](https://drive.google.com/file/d/1S0MRRq2Ej19p18ZYs3y1Lb5WDHZN7xLV/view?usp=sharing) | [Slides](https://drive.google.com/file/d/1iMC_G35EuJ9ObWxtH5yVydpKOANabI_2/view?usp=sharing)
+### [Report](https://drive.google.com/file/d/1zukWdR4aqCA1ObP0HqVvpzOucoFv3nnF/view?usp=sharing) | [Slides](https://drive.google.com/file/d/1iMC_G35EuJ9ObWxtH5yVydpKOANabI_2/view?usp=sharing)
 
 ## Teammate
 * Zhi-Yi Chin: joycenerd.cs09@nycu.edu.tw
